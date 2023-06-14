@@ -1,10 +1,14 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import mongoose from 'mongoose';
 import Category from "@/models/Category";
+import { getServerSession } from "next-auth";
+import { isAdminRequest } from "./auth/[...nextauth]";
 
 export default async function handle(req,res){
     const {method} = req;
     await mongooseConnect();
+    await isAdminRequest(req,res);
+
 
     if (method === 'GET'){
         res.json(await Category.find().populate('parent'));
@@ -45,7 +49,6 @@ export default async function handle(req,res){
             parent = new mongoose.Types.ObjectId(parentCategory);
         }
 
-    
         const categoryDoc = await Category.updateOne({_id},{
             name,
             parent: parentCategory || undefined ,

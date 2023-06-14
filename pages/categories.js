@@ -19,14 +19,14 @@ function Categories({ swal }) {
     });
   }
 
-  async function saveCategory(ev) {
+  async function saveCategory(ev){
     ev.preventDefault();
-    const data = { 
+    const data = {
       name,
       parentCategory,
       properties:properties.map(p => ({
         name:p.name,
-        value:p.values.split(','),
+        values:p.values.split(','),
       })),
     };
     if (editedCategory) {
@@ -34,21 +34,24 @@ function Categories({ swal }) {
       await axios.put('/api/categories', data);
       setEditedCategory(null);
     } else {
-      await axios.post("/api/categories", { ...data });
+      await axios.post('/api/categories', data);
     }
-    setName("");
+    setName('');
     setParentCategory('');
     setProperties([]);
     fetchCategories();
   }
 
-
-
-  function editCategory(Category) {
-    setEditedCategory(Category);
-    setName(Category.name);
-    setParentCategory(Category.parent?._id);
-    setProperties(Category.properties);
+  function editCategory(category){
+    setEditedCategory(category);
+    setName(category.name);
+    setParentCategory(category.parent?._id);
+    setProperties(
+      category.properties.map(({name,values}) => ({
+      name,
+      values:values.join(',')
+    }))
+    );
   }
 
   function deleteCategory(Category) {
@@ -164,6 +167,7 @@ function Categories({ swal }) {
             setEditedCategory(null);
             setName('');
             setParentCategory('');
+            setProperties([]);
            }} 
            >
             Cancelar
@@ -186,19 +190,23 @@ function Categories({ swal }) {
           </tr>
         </thead>
         <tbody>
-          {categories.length > 0 && categories.map(Category => (
-            <tr key={Category._id}>
-              <td>{Category.name}</td>
-              <td>{Category?.parent?.name}</td>
+          {categories.length > 0 && categories.map(category => (
+            <tr key={category._id}>
+              <td>{category.name}</td>
+              <td>{category?.parent?.name}</td>
               <td className="flex">
                 <button
-                  onClick={() => editCategory(Category)}
-                  className="btn-primary mr-1"
-                >Edit</button>
-                <button
-                  onClick={() => deleteCategory(Category)}
-                  className="btn-primary"
-                >Eliminar</button>
+                 onClick={() => editCategory(category)}
+                 className="btn-default mr-1 shadow-sm flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                  </svg>
+                  Editar</button>
+                {/* <button
+                  onClick={() => deleteCategory(category)}
+                  className="btn-red"
+                >Eliminar</button> */}
               </td>
             </tr>
           ))}

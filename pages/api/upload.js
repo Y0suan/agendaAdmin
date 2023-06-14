@@ -1,57 +1,21 @@
-// import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-// import multiparty from 'multiparty';
-// import fs from 'fs';
-// import mime from 'mime-types';
-// const  bucketName = 'agenda-next-panel'
-
-
-// export default async function handle(req,res){
-// const form = new multiparty.Form();
-// const {fields,files} = await new Promise((resolve,reject)=>{   
-//    form.parse(req,(err, fields, files)=>{
-//      if (err) reject(err);
-//      resolve({fields,files});
-//    });
-// });
-// console.log('length:', files.file.length);
-// const client = new S3Client({
-//   region: 'us-east-2',
-//   credentials:{
-//     accessKeyId: process.env.S3_ACCESS_KEY,
-//     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-//   },
-// });
-// const links = [];
-// for (const file of files.file){
-//   const ext = file.originalFilename.split('.').pop();
-//   const newFilename = Date.now() + '.' + ext ;
-//   console.log({ext,file});
-//   await client.send(new PutObjectCommand({
-//     Bucket: bucketName,
-//     Key:newFilename,
-//     Body: fs.readFileSync(file.path),
-//     ACL: 'public-read',
-//     ContentType: mime.lookup(file.path),
-//   }));
-//   const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
-//   links.push(link);
-// }
-// res.json({links});
-
-// }
-
-// export const config = {
-//   api:{bodyParse:false},
-// };
-
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import cloudinary from 'cloudinary';
 import multiparty from 'multiparty';
 import fs from 'fs';
-import mime from 'mime-types';
+import { mongooseConnect } from '@/lib/mongoose';
+import { isAdminRequest } from './auth/[...nextauth]';
 
-const bucketName = 'agenda-next-panel';
+const cloudinaryConfig = {
+  cloud_name: 'dzqdjsrez',
+  api_key: '424676217557484',
+  api_secret: 'oiVBuiv0hEdureUDtNg_bCV90_8',
+};
+
+cloudinary.v2.config(cloudinaryConfig);
 
 export default async function handle(req, res) {
+  await mongooseConnect();
+  await isAdminRequest(req, res);
+
   try {
     const form = new multiparty.Form();
     const { fields, files } = await new Promise((resolve, reject) => {
@@ -63,30 +27,16 @@ export default async function handle(req, res) {
 
     console.log('length:', files.file.length);
 
-    const client = new S3Client({
-      region: 'us-east-2',
-      credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-      },
-    });
-
     const links = [];
 
     for (const file of files.file) {
-      const ext = file.originalFilename.split('.').pop();
-      const newFilename = Date.now() + '.' + ext;
-      await client.send(
-        new PutObjectCommand({
-          Bucket: bucketName,
-          Key: newFilename,
-          Body: fs.readFileSync(file.path),
-          ACL: 'public-read',
-          ContentType: mime.lookup(file.path),
-        })
-      );
+      const result = await cloudinary.v2.uploader.upload(file.path, {
+        folder: 'agenda-next-panel',
+        resource_type: 'auto',
+        tags: 'agenda-next-panel',
+      });
 
-      const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+      const link = result.secure_url;
       links.push(link);
     }
 

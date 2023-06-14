@@ -1,10 +1,11 @@
 import Layout from "@/components/Layout";
+import Proximamente from "@/components/Proximamente";
 import { useSession } from "next-auth/react";
 
 export default function Home() {
   const {data:session}=useSession();
   return<Layout>
-    <div className="text-blue-900 flex justify-between">
+    <div className="text-blue-600 flex justify-between">
       <h2>
         Hola,<b> {session?.user?.name}</b> 
       </h2>
@@ -15,5 +16,6 @@ export default function Home() {
       </span>
       </div>
     </div>
+    <Proximamente/>
   </Layout>
 }

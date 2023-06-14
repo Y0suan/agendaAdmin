@@ -5,17 +5,25 @@ import axios from "axios";
 
 
 export default function Products(){
-    const [products,setProducts] = useState([]);
-    useEffect(()=>{
-        axios.get('/api/products').then(response =>{
-            setProducts(response.data);
-        })
-    },[]);
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get("/api/products");
+          const filteredProducts = response.data.filter(product => product.category === "646e1db1047fef35ee7a8467");
+          setProducts(filteredProducts);
+        } catch (error) {
+          console.error("Error al recuperar los productos:", error);
+        }
+      };
+      fetchProducts();
+    }, []);
+    
+
     return(
         <Layout>
-            <Link className="btn-primary" href={'/products/new'}>
-             Crea una nueva Publicacion
-            </Link>
+            <Link className="btn-primary" href={'/products/new'}>Crea una nueva Publicacion</Link>
             <table className="basic mt-2 ">
                 <thead>
                     <tr>

@@ -3,19 +3,24 @@ import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+export default function Imperdible(){
+    const [products, setProducts] = useState([]);
 
-export default function Products(){
-    const [products,setProducts] = useState([]);
-    useEffect(()=>{
-        axios.get('/api/products').then(response =>{
-            setProducts(response.data);
-        })
-    },[]);
+    useEffect(() => {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get("/api/products");
+          const filteredProducts = response.data.filter(product => product.category === "6480873ee963e8575df64abc");
+          setProducts(filteredProducts);
+        } catch (error) {
+          console.error("Error al recuperar los productos:", error);
+        }
+      };
+      fetchProducts();
+    }, []);
     return(
         <Layout>
-            <Link className="btn-primary" href={'/products/new'}>
-             Crea una nueva Publicacion
-            </Link>
+            <Link className="btn-primary" href={'/products/new'}>Crea una nueva Publicacion</Link>
             <table className="basic mt-2 ">
                 <thead>
                     <tr>
