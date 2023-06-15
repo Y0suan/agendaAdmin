@@ -26,16 +26,17 @@ export default function DeleteProductPage(){
     }
     return(
         <Layout>
-                <h1 className="text-center">Estas seguro que quieres eliminar el producto 
-                &nbsp;'{productInfo?.title}'?</h1>
-                <div className="flex gap-2 justify-center">
+                <h1 className="text-center">Estás seguro que quieres eliminar el producto 
+                &nbsp;{productInfo?.title}&apos;?
+                </h1>
+                <div class="flex gap-2 justify-center">
                 <button
                 onClick={deleteProduct} 
-                className="btn-red" >
+                class="btn-red" >
                    Si
                 </button>
                 <button 
-                  className="btn-default" 
+                  class="btn-default" 
                   onClick={goBack}>
                    No
                 </button>

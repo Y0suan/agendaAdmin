@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
+import Image from "next/image";
 
 
 export default function ProductForm({
@@ -135,14 +136,14 @@ export default function ProductForm({
                 ))}
             </select>
             {propertiesToFill && propertiesToFill.length > 0 && propertiesToFill.map(p => (
-            <div className="flex gap-1">
+            <div key={p._id} className="flex gap-1">
             <div>{p.name}</div>
             <select
               value={productProperties[p.name]}
               onChange={ev => setProductProp(p.name, ev.target.value)}
             >
               {p.values && p.values.map(v => (
-                <option value={v}>{v}</option>
+                <option key={v} value={v}>{v}</option>
               ))}
             </select>
           </div>
@@ -159,10 +160,11 @@ export default function ProductForm({
                 setList={updateIMagesOrder}
                 >
                 {!!images?.length && images.map(link => (
-                    <div key={link} className=" h-24 bg-white shadow-sm rounded-sm border border-gray-200 ">
-                        <img src={link} className="rounded-sm"></img>
-                    </div>
+                  <div key={link} className="h-24 bg-white shadow-sm rounded-sm border border-gray-200">
+                    <img src={link} alt="Descripción de la imagen" className="rounded-sm" />
+                  </div>
                 ))}
+
                 </ReactSortable>
                 {isUploading && (
                     <div className="h-24 flex items-center">
