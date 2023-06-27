@@ -5,7 +5,7 @@ import GoogleProvider from 'next-auth/providers/google'
 
 
 const nextAuthUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-const adminEmails = ['yosuanmulti@gmail.com']
+const adminEmails = ['yosuanmulti@gmail.com','candenolde@hotmail.com','roxanachamorro82@gmail.com','srel.rolf@hotmail.com']
 
 export const authOptions = {
   providers: [
