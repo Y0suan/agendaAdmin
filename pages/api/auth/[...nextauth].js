@@ -4,7 +4,7 @@ import NextAuth, { getServerSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
 
-const nextAuthUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+const nextAuthUrl = process.env.NEXTAUTH_URL || 'https://19998.vercel.app/api/auth/callback/google';
 const adminEmails = ['yosuanmulti@gmail.com']
 
 export const authOptions = {
