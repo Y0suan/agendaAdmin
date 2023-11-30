@@ -9,6 +9,7 @@ import Image from "next/image";
 export default function ProductForm({
   _id,
   title: existingTitle,
+  fecha: existingFecha,
   description: existingDescription,
   price: existingPrice,
   hubicacion: existingHubicacion,
@@ -18,6 +19,7 @@ export default function ProductForm({
   category: assignedCategory,
 }) {
   const [title, setTitle] = useState(existingTitle || '');
+  const [fecha, setFecha] = useState(existingFecha || '');
   const [description, setDescription] = useState(existingDescription || '');
   const [category, setCategory] = useState(assignedCategory || ''); // Asegúrate de que assignedCategory sea un ObjectId válido en lugar de una cadena vacía.
 
@@ -42,7 +44,7 @@ export default function ProductForm({
     async function saveProduct(ev){
         ev.preventDefault();
         const data = {
-            title,description,price,images,category,hubicacion,facebook,instagram,
+            title,fecha,description,price,images,category,hubicacion,facebook,instagram,
             properties:productProperties
         };
         if(_id){
@@ -125,6 +127,17 @@ export default function ProductForm({
               value={title}
               onChange={ev => setTitle(ev.target.value)}
             />
+
+            <div className="flex gap-4 w-100%">
+              <div>
+            <label>Fecha Del Evento</label>
+            <input 
+              type='date' 
+              value={fecha}
+              onChange={ev => setFecha(ev.target.value)}
+            />
+            </div>
+            <div>
             <label>Categoria</label>
             <select 
                 value={category} 
@@ -148,7 +161,8 @@ export default function ProductForm({
             </select>
           </div>
         ))}
-
+        </div>
+        </div>
 
             <label>
                 Fotos

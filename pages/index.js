@@ -38,7 +38,6 @@ export default function Home() {
       </span>
       </div>
     </div>
-    <Proximamente/>
    
   </Layout>
 }
